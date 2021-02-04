@@ -11,14 +11,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class GooglePlacesClient {
 
     private final String CRACOW_COORDINATES = "50.0614300,19.9365800";
-    private String radius = "500";
-    private String types = "food";
-    private String name = "cafe";
+    private String radius;
+    private String name;
 
     @Value("${google_key}")
     private String googleKey;
@@ -26,14 +27,14 @@ public class GooglePlacesClient {
     private static final String GOOGLE_MAP_PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 
     @EventListener(ApplicationReadyEvent.class)
-    public void getGoogleMapPlaces(){
+    public List<Result> getGoogleMapPlaces(){
         RestTemplate restTemplate = new RestTemplate();
-
         GoogleMapPlaces googleMapPlaces = restTemplate.getForObject(getGoogleMapPlacesFinalUrl(), GoogleMapPlaces.class);
-
+        List<Result> resultList = new ArrayList<>();
         for (Result result: googleMapPlaces.getResults()){
-            System.out.println(result.getName());
+            resultList.add(result);
         }
+        return resultList;
     }
 
     private URI getGoogleMapPlacesFinalUrl(){
@@ -42,7 +43,6 @@ public class GooglePlacesClient {
             URIBuilder uriBuilder = new URIBuilder(GOOGLE_MAP_PLACES_BASE_URL);
             uriBuilder.addParameter("location",CRACOW_COORDINATES );
             uriBuilder.addParameter("radius", radius);
-            uriBuilder.addParameter("types", types);
             uriBuilder.addParameter("name", name);
             uriBuilder.addParameter("key", googleKey);
             uri = uriBuilder.build();
@@ -60,19 +60,15 @@ public class GooglePlacesClient {
         this.radius = radius;
     }
 
-    public String getTypes() {
-        return types;
-    }
-
-    public void setTypes(String types) {
-        this.types = types;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGoogleKey() {
+        return googleKey;
     }
 }
