@@ -1,11 +1,9 @@
-package com.cracowapp.visitcracow;
+package com.cracowapp.visitcracow.client;
 
 import com.cracowapp.visitcracow.model.GoogleMapPlaces;
 import com.cracowapp.visitcracow.model.Result;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,7 +24,6 @@ public class GooglePlacesClient {
 
     private static final String GOOGLE_MAP_PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 
-    @EventListener(ApplicationReadyEvent.class)
     public List<Result> getGoogleMapPlaces(){
         RestTemplate restTemplate = new RestTemplate();
         GoogleMapPlaces googleMapPlaces = restTemplate.getForObject(getGoogleMapPlacesFinalUrl(), GoogleMapPlaces.class);

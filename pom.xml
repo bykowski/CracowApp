@@ -28,6 +28,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.wudaosoft</groupId>
+            <artifactId>httpclient-spring-boot-starter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>30.1-jre</version>

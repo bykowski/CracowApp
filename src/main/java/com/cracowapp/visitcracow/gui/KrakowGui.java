@@ -1,7 +1,7 @@
 package com.cracowapp.visitcracow.gui;
 
-import com.cracowapp.visitcracow.GoogleMyResultsMapCreator;
-import com.cracowapp.visitcracow.GooglePlacesClient;
+import com.cracowapp.visitcracow.service.GoogleMyResultsMapCreator;
+import com.cracowapp.visitcracow.client.GooglePlacesClient;
 import com.cracowapp.visitcracow.model.Result;
 import com.google.common.base.Joiner;
 import com.vaadin.flow.component.Text;
@@ -17,7 +17,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import org.jsoup.select.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -25,19 +24,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Route
-public class Gui extends VerticalLayout {
+public class KrakowGui extends VerticalLayout {
 
     private GooglePlacesClient googlePlacesClient;
     private GoogleMyResultsMapCreator googleMyResultsMapCreator;
 
     @Autowired
-    public Gui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator) {
+    public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator) {
         this.googlePlacesClient = googlePlacesClient;
         this.googleMyResultsMapCreator = googleMyResultsMapCreator;
 
-        Label labelWelcome = new Label("GET YOUR UNIQUE PHOTO FROM KRAKOW AND DISCOVER THE CITY!");
+        //GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW AND DISCOVER THE CITY in ASCII
+        Label labelWelcome = new Label("\uD835\uDC06\uD835\uDC04\uD835\uDC13 \uD835\uDC18\uD835\uDC0E\uD835" +
+                "\uDC14\uD835\uDC11 \uD835\uDC0E\uD835\uDC16\uD835\uDC0D \uD835\uDC14\uD835\uDC0D\uD835\uDC08\uD835" +
+                "\uDC10\uD835\uDC14\uD835\uDC04 \uD835\uDC12\uD835\uDC0E\uD835\uDC14\uD835\uDC15\uD835\uDC04\uD835" +
+                "\uDC0D\uD835\uDC08\uD835\uDC11 \uD835\uDC0F\uD835\uDC07\uD835\uDC0E\uD835\uDC13\uD835\uDC0E \uD835" +
+                "\uDC05\uD835\uDC11\uD835\uDC0E\uD835\uDC0C \uD835\uDC0A\uD835\uDC11\uD835\uDC00\uD835\uDC0A\uD835" +
+                "\uDC0E\uD835\uDC16 \uD835\uDC00\uD835\uDC0D\uD835\uDC03 \uD835\uDC03\uD835\uDC08\uD835\uDC12\uD835" +
+                "\uDC02\uD835\uDC0E\uD835\uDC15\uD835\uDC04\uD835\uDC11 \uD835\uDC13\uD835\uDC07\uD835\uDC04 \uD835" +
+                "\uDC02\uD835\uDC08\uD835\uDC13\uD835\uDC18");
         setHorizontalComponentAlignment(Alignment.CENTER, labelWelcome);
         add(labelWelcome);
+
+        Label labelPhotoUrl = new Label("Are you ready to have photo from Krakow?");
+        TextField textFieldPhotoUrl = new TextField("Link to your photo");
+        Button buttonPhoto = new Button("Get photo!");
+        add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto);
+
+//        buttonPhoto.addClickListener(clickEvent -> {
+//
+//        });
+
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSizeFull();
@@ -47,6 +64,7 @@ public class Gui extends VerticalLayout {
                 + googlePlacesClient.getGoogleKey(), "KRAKOW map");
 
         Label labelPlace = new Label("What you would you like to find in Krakow?");
+        Label labelRefreshPage = new Label("⟳ Please, refresh the page before a new search :)");
         TextField textField = new TextField();
 
         Label labelRadius = new Label("How far from the city centre? [m]");
@@ -73,7 +91,7 @@ public class Gui extends VerticalLayout {
 
             if (googlePlacesClient.getGoogleMapPlaces().isEmpty()){
                 Dialog dialog = new Dialog();
-                dialog.add(new Text("SORRY, THERE ARE NO RESULTS, TRY AGAIN -> "),
+                dialog.add(new Text("SORRY, THERE ARE NO RESULTS, TRY AGAIN ⮕ "),
                         new Button("Refresh page", e -> UI.getCurrent().getPage().reload()));
                 dialog.setWidth("550px");
                 dialog.setHeight("100px");
@@ -94,7 +112,7 @@ public class Gui extends VerticalLayout {
         });
 
         horizontalLayout.add(image, verticalLayout);
-        verticalLayout.add(labelPlace, textField, labelRadius, comboBoxRadius, buttonSearch, grid);
+        verticalLayout.add(labelPlace, labelRefreshPage, textField, labelRadius, comboBoxRadius, buttonSearch, grid);
         add(horizontalLayout);
     }
 }

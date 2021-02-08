@@ -1,4 +1,4 @@
-package com.cracowapp.visitcracow;
+package com.cracowapp.visitcracow.service;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
