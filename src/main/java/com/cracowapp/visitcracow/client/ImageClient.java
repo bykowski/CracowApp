@@ -4,43 +4,40 @@ import com.cracowapp.visitcracow.model.OutputImageUrl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Controller
 public class ImageClient {
+
     private static final String IMAGE_CHANGE_URL = "https://slazzer.com/api/v1/remove_image_background";
 
     @Value("${API-KEY}")
     private String apiKey;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void get(){
-        RestTemplate restTemplate = new RestTemplate();
+    public void get2() {
 
-        MultiValueMap<String,String> myMap = new LinkedMultiValueMap<>();
-        myMap.add("source_image_url", "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/1200px-Donald_Trump_official_portrait.jpg");
-        myMap.add("bg_image_url", "https://www.kawiarniany.pl/wp-content/uploads/2020/03/rynek-w-krakowie-ciekawostki.jpg");
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("source_image_url", "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/1200px-Donald_Trump_official_portrait.jpg");
+        formData.add("bg_image_url", "https://www.kawiarniany.pl/wp-content/uploads/2020/03/rynek-w-krakowie-ciekawostki.jpg");
 
-        HttpHeaders httpHeaders = getHttpHeaders();
+        String response = WebClient.create()
+                .post()
+                .uri(IMAGE_CHANGE_URL)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("API-KEY", apiKey)
+                .body(BodyInserters.fromFormData(formData))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(myMap, httpHeaders);
-
-        ResponseEntity<OutputImageUrl> outputImageUrl = restTemplate.exchange(IMAGE_CHANGE_URL, HttpMethod.POST,
-                httpEntity, OutputImageUrl.class);
-
-        System.out.println(outputImageUrl.getBody().getOutputImageUrl());
-
-    }
-
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        httpHeaders.add("API-KEY", apiKey);
-        return httpHeaders;
+        OutputImageUrl outputImageUrl = new OutputImageUrl(response.substring(22, response.length() -2));
+        System.out.println(outputImageUrl.getOutputImageUrl());
     }
 }
+
