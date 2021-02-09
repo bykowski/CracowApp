@@ -2,8 +2,6 @@ package com.cracowapp.visitcracow.client;
 
 import com.cracowapp.visitcracow.model.OutputImageUrl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
@@ -15,16 +13,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ImageClient {
 
     private static final String IMAGE_CHANGE_URL = "https://slazzer.com/api/v1/remove_image_background";
+    private static final String IMAGE_BACKGROUND = "https://pixabay.com/pl/photos/krak%C3%B3w-polska-miasta-architektura-4889976/";
+
 
     @Value("${API-KEY}")
     private String apiKey;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void get2() {
-
+    public String getPhotoFromKrakow(String sourceImage) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("source_image_url", "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Donald_Trump_official_portrait.jpg/1200px-Donald_Trump_official_portrait.jpg");
-        formData.add("bg_image_url", "https://www.kawiarniany.pl/wp-content/uploads/2020/03/rynek-w-krakowie-ciekawostki.jpg");
+        formData.add("source_image_url", sourceImage);
+        formData.add("bg_image_url", IMAGE_BACKGROUND);
 
         String response = WebClient.create()
                 .post()
@@ -37,7 +35,7 @@ public class ImageClient {
                 .block();
 
         OutputImageUrl outputImageUrl = new OutputImageUrl(response.substring(22, response.length() -2));
-        System.out.println(outputImageUrl.getOutputImageUrl());
+        return outputImageUrl.getOutputImageUrl();
     }
 }
 

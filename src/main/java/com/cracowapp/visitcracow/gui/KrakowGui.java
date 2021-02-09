@@ -48,12 +48,13 @@ public class KrakowGui extends VerticalLayout {
 
         Label labelPhotoUrl = new Label("Are you ready to have photo from Krakow?");
         TextField textFieldPhotoUrl = new TextField("Link to your photo");
+        textFieldPhotoUrl.setWidthFull();
         Button buttonPhoto = new Button("Get photo!");
         add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto);
 
-//        buttonPhoto.addClickListener(clickEvent -> {
-//
-//        });
+        buttonPhoto.addClickListener(clickEvent -> {
+
+        });
 
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
