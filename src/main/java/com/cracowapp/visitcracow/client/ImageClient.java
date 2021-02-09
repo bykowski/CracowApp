@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ImageClient {
 
     private static final String IMAGE_CHANGE_URL = "https://slazzer.com/api/v1/remove_image_background";
-    private static final String IMAGE_BACKGROUND = "https://pixabay.com/pl/photos/krak%C3%B3w-polska-miasta-architektura-4889976/";
+    private static final String IMAGE_BACKGROUND = "https://cdn.pixabay.com/photo/2020/04/04/20/25/krakow-5003750_960_720.jpg";
 
 
     @Value("${API-KEY}")

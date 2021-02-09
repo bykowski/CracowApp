@@ -1,5 +1,6 @@
 package com.cracowapp.visitcracow.gui;
 
+import com.cracowapp.visitcracow.client.ImageClient;
 import com.cracowapp.visitcracow.service.GoogleMyResultsMapCreator;
 import com.cracowapp.visitcracow.client.GooglePlacesClient;
 import com.cracowapp.visitcracow.model.Result;
@@ -24,15 +25,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Route
-public class KrakowGui extends VerticalLayout {
-
-    private GooglePlacesClient googlePlacesClient;
-    private GoogleMyResultsMapCreator googleMyResultsMapCreator;
+public class KrakowGui extends VerticalLayout{
 
     @Autowired
-    public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator) {
-        this.googlePlacesClient = googlePlacesClient;
-        this.googleMyResultsMapCreator = googleMyResultsMapCreator;
+    public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator,
+                     ImageClient imageClient) {
 
         //GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW AND DISCOVER THE CITY in ASCII
         Label labelWelcome = new Label("\uD835\uDC06\uD835\uDC04\uD835\uDC13 \uD835\uDC18\uD835\uDC0E\uD835" +
@@ -45,17 +42,6 @@ public class KrakowGui extends VerticalLayout {
                 "\uDC02\uD835\uDC08\uD835\uDC13\uD835\uDC18");
         setHorizontalComponentAlignment(Alignment.CENTER, labelWelcome);
         add(labelWelcome);
-
-        Label labelPhotoUrl = new Label("Are you ready to have photo from Krakow?");
-        TextField textFieldPhotoUrl = new TextField("Link to your photo");
-        textFieldPhotoUrl.setWidthFull();
-        Button buttonPhoto = new Button("Get photo!");
-        add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto);
-
-        buttonPhoto.addClickListener(clickEvent -> {
-
-        });
-
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSizeFull();
@@ -115,5 +101,19 @@ public class KrakowGui extends VerticalLayout {
         horizontalLayout.add(image, verticalLayout);
         verticalLayout.add(labelPlace, labelRefreshPage, textField, labelRadius, comboBoxRadius, buttonSearch, grid);
         add(horizontalLayout);
+
+        Label labelPhotoUrl = new Label("GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW!");
+        TextField textFieldPhotoUrl = new TextField("Link to your photo (16:9 will be the best format of photo):");
+        textFieldPhotoUrl.setValue("https://cdn.pixabay.com/photo/2015/08/15/17/00/putin-889784_960_720.jpg");
+        textFieldPhotoUrl.setWidthFull();
+        Button buttonPhoto = new Button("Click here and wait a moment");
+        add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto);
+
+        buttonPhoto.addClickListener(clickEvent -> {
+            Image imageFromKrakow = new Image(imageClient.getPhotoFromKrakow(textFieldPhotoUrl.getValue()),
+                    imageClient.getPhotoFromKrakow(textFieldPhotoUrl.getValue()));
+            setHorizontalComponentAlignment(Alignment.CENTER, imageFromKrakow);
+            add(imageFromKrakow);
+        });
     }
 }
