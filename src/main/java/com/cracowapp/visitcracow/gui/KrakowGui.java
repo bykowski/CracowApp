@@ -16,6 +16,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +33,12 @@ public class KrakowGui extends VerticalLayout{
                      ImageClient imageClient) {
 
         //GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW AND DISCOVER THE CITY in ASCII
-        Label labelWelcome = new Label("\uD835\uDC06\uD835\uDC04\uD835\uDC13 \uD835\uDC18\uD835\uDC0E\uD835" +
-                "\uDC14\uD835\uDC11 \uD835\uDC0E\uD835\uDC16\uD835\uDC0D \uD835\uDC14\uD835\uDC0D\uD835\uDC08\uD835" +
-                "\uDC10\uD835\uDC14\uD835\uDC04 \uD835\uDC12\uD835\uDC0E\uD835\uDC14\uD835\uDC15\uD835\uDC04\uD835" +
-                "\uDC0D\uD835\uDC08\uD835\uDC11 \uD835\uDC0F\uD835\uDC07\uD835\uDC0E\uD835\uDC13\uD835\uDC0E \uD835" +
-                "\uDC05\uD835\uDC11\uD835\uDC0E\uD835\uDC0C \uD835\uDC0A\uD835\uDC11\uD835\uDC00\uD835\uDC0A\uD835" +
-                "\uDC0E\uD835\uDC16 \uD835\uDC00\uD835\uDC0D\uD835\uDC03 \uD835\uDC03\uD835\uDC08\uD835\uDC12\uD835" +
-                "\uDC02\uD835\uDC0E\uD835\uDC15\uD835\uDC04\uD835\uDC11 \uD835\uDC13\uD835\uDC07\uD835\uDC04 \uD835" +
-                "\uDC02\uD835\uDC08\uD835\uDC13\uD835\uDC18");
+        Label labelWelcome = new Label("WELCOME TO KRAKOW - DISCOVER THE CITY AND GET YOUR OWN UNIQUE SOUVENIR PHOTO!");
         setHorizontalComponentAlignment(Alignment.CENTER, labelWelcome);
-        add(labelWelcome);
+
+        ProgressBar progressBarMain = new ProgressBar();
+        progressBarMain.setValue(1);
+        add(labelWelcome, progressBarMain);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSizeFull();
@@ -102,18 +99,31 @@ public class KrakowGui extends VerticalLayout{
         verticalLayout.add(labelPlace, labelRefreshPage, textField, labelRadius, comboBoxRadius, buttonSearch, grid);
         add(horizontalLayout);
 
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setValue(1);
+
         Label labelPhotoUrl = new Label("GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW!");
+        setHorizontalComponentAlignment(Alignment.CENTER, labelPhotoUrl);
         TextField textFieldPhotoUrl = new TextField("Link to your photo (16:9 will be the best format of photo):");
-        textFieldPhotoUrl.setValue("https://cdn.pixabay.com/photo/2015/08/15/17/00/putin-889784_960_720.jpg");
+        textFieldPhotoUrl.setValue("https://cdn.pixabay.com/photo/2019/06/18/04/49/wax-figure-4281412_960_720.jpg");
         textFieldPhotoUrl.setWidthFull();
-        Button buttonPhoto = new Button("Click here and wait a moment");
-        add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto);
+        Button buttonPhoto = new Button("Click here and wait a moment, the photo will appear below ⬇ :");
+        add(labelPhotoUrl, progressBar, textFieldPhotoUrl, buttonPhoto);
 
         buttonPhoto.addClickListener(clickEvent -> {
-            Image imageFromKrakow = new Image(imageClient.getPhotoFromKrakow(textFieldPhotoUrl.getValue()),
-                    imageClient.getPhotoFromKrakow(textFieldPhotoUrl.getValue()));
-            setHorizontalComponentAlignment(Alignment.CENTER, imageFromKrakow);
-            add(imageFromKrakow);
+            try{
+                Image imageFromKrakow = new Image(imageClient.getPhotoFromKrakow(textFieldPhotoUrl.getValue()),
+                        imageClient.getPhotoFromKrakow(textFieldPhotoUrl.getValue()));
+                setHorizontalComponentAlignment(Alignment.CENTER, imageFromKrakow);
+                add(imageFromKrakow);
+            }catch (Exception e){
+                Dialog dialog = new Dialog();
+                dialog.add(new Text("OOPS, SOMETHING WENT WRONG, TRY AGAIN ⮕ "),
+                        new Button("Refresh page", b -> UI.getCurrent().getPage().reload()));
+                dialog.setWidth("560px");
+                dialog.setHeight("100px");
+                dialog.open();
+            }
         });
     }
 }

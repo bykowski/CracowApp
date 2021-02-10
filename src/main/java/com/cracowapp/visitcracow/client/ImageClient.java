@@ -1,6 +1,8 @@
 package com.cracowapp.visitcracow.client;
 
 import com.cracowapp.visitcracow.model.OutputImageUrl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -34,8 +36,15 @@ public class ImageClient {
                 .bodyToMono(String.class)
                 .block();
 
-        OutputImageUrl outputImageUrl = new OutputImageUrl(response.substring(22, response.length() -2));
-        return outputImageUrl.getOutputImageUrl();
+        try{
+            OutputImageUrl outputImageUrl = new ObjectMapper().readValue(response, OutputImageUrl.class);
+            return  outputImageUrl.getOutputImageUrl();
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+            return "";
+        }
+//        OutputImageUrl outputImageUrl = new OutputImageUrl(response.substring(22, response.length() -2));
+//        return outputImageUrl.getOutputImageUrl();
     }
 }
 
