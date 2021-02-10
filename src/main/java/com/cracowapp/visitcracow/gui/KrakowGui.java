@@ -32,7 +32,6 @@ public class KrakowGui extends VerticalLayout{
     public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator,
                      ImageClient imageClient) {
 
-        //GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW AND DISCOVER THE CITY in ASCII
         Label labelWelcome = new Label("WELCOME TO KRAKOW - DISCOVER THE CITY AND GET YOUR OWN UNIQUE SOUVENIR PHOTO!");
         setHorizontalComponentAlignment(Alignment.CENTER, labelWelcome);
 
@@ -47,7 +46,7 @@ public class KrakowGui extends VerticalLayout{
         Image image = new Image("https://maps.googleapis.com/maps/api/staticmap?center=Krakow,Sukiennice&zoom=15&size=1300x2500&key="
                 + googlePlacesClient.getGoogleKey(), "KRAKOW map");
 
-        Label labelPlace = new Label("What you would you like to find in Krakow?");
+        Label labelPlace = new Label("What would you like to find in Krakow?");
         Label labelRefreshPage = new Label("⟳ Please, refresh the page before a new search :)");
         TextField textField = new TextField();
 
@@ -108,7 +107,9 @@ public class KrakowGui extends VerticalLayout{
         textFieldPhotoUrl.setValue("https://cdn.pixabay.com/photo/2019/06/18/04/49/wax-figure-4281412_960_720.jpg");
         textFieldPhotoUrl.setWidthFull();
         Button buttonPhoto = new Button("Click here and wait a moment, the photo will appear below ⬇ :");
-        add(labelPhotoUrl, progressBar, textFieldPhotoUrl, buttonPhoto);
+        Label labelPhotoUrl1 = new Label("* Queen Elizabeth's default photo is a wax figure photo from the free photo database");
+        Label labelPhotoUrl2 = new Label("** The amount of photo transformations is limited by the amount of credits, so it won't work forever :(");
+        add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto, labelPhotoUrl1, labelPhotoUrl2);
 
         buttonPhoto.addClickListener(clickEvent -> {
             try{
