@@ -3,23 +3,30 @@ package com.cracowapp.visitcracow.client;
 import com.cracowapp.visitcracow.model.OutputImageUrl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+
 @Controller
 public class ImageClient {
 
-    private static final String IMAGE_CHANGE_URL = "https://slazzer.com/api/v1/remove_image_background";
-    private static final String IMAGE_BACKGROUND = "https://cdn.pixabay.com/photo/2020/04/04/20/25/krakow-5003750_960_720.jpg";
-
+    public static final Logger LOGGER = LoggerFactory.getLogger(ImageClient.class);
 
     @Value("${API-KEY}")
-    private String apiKey;
+    private String API_KEY;
+
+    @Value("${IMAGE_CHANGE_URL}")
+    private String IMAGE_CHANGE_URL;
+
+    @Value("${IMAGE_BACKGROUND}")
+    private String IMAGE_BACKGROUND;
 
     public String getPhotoFromKrakow(String sourceImage) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
@@ -30,7 +37,7 @@ public class ImageClient {
                 .post()
                 .uri(IMAGE_CHANGE_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .header("API-KEY", apiKey)
+                .header("API-KEY", API_KEY)
                 .body(BodyInserters.fromFormData(formData))
                 .retrieve()
                 .bodyToMono(String.class)
@@ -40,11 +47,10 @@ public class ImageClient {
             OutputImageUrl outputImageUrl = new ObjectMapper().readValue(response, OutputImageUrl.class);
             return  outputImageUrl.getOutputImageUrl();
         }catch (JsonProcessingException e){
-            e.printStackTrace();
-            return "";
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
-//        OutputImageUrl outputImageUrl = new OutputImageUrl(response.substring(22, response.length() -2));
-//        return outputImageUrl.getOutputImageUrl();
     }
+
 }
 

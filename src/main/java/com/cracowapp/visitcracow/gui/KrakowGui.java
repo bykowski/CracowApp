@@ -32,7 +32,7 @@ public class KrakowGui extends VerticalLayout{
     public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator,
                      ImageClient imageClient) {
 
-        Label labelWelcome = new Label("WELCOME TO KRAKOW - DISCOVER THE CITY AND GET YOUR OWN UNIQUE SOUVENIR PHOTO!");
+        Label labelWelcome = new Label("WELCOME TO KRAKOW - DISCOVER THE CITY AND GET YOUR OWN SOUVENIR PHOTO!");
         setHorizontalComponentAlignment(Alignment.CENTER, labelWelcome);
 
         ProgressBar progressBarMain = new ProgressBar();
@@ -101,15 +101,15 @@ public class KrakowGui extends VerticalLayout{
         ProgressBar progressBar = new ProgressBar();
         progressBar.setValue(1);
 
-        Label labelPhotoUrl = new Label("GET YOUR OWN UNIQUE SOUVENIR PHOTO FROM KRAKOW!");
+        Label labelPhotoUrl = new Label("GET YOUR OWN SOUVENIR PHOTO FROM KRAKOW!");
         setHorizontalComponentAlignment(Alignment.CENTER, labelPhotoUrl);
         TextField textFieldPhotoUrl = new TextField("Link to your photo (16:9 will be the best format of photo):");
         textFieldPhotoUrl.setValue("https://cdn.pixabay.com/photo/2019/06/18/04/49/wax-figure-4281412_960_720.jpg");
         textFieldPhotoUrl.setWidthFull();
         Button buttonPhoto = new Button("Click here and wait a moment, the photo will appear below ⬇ :");
-        Label labelPhotoUrl1 = new Label("* Queen Elizabeth's default photo is a wax figure photo from the free photo database");
+        Label labelPhotoUrl1 = new Label("* The photo of Queen Elizabeth II is a photo of a wax figure from the free photo database");
         Label labelPhotoUrl2 = new Label("** The amount of photo transformations is limited by the amount of credits, so it won't work forever :(");
-        add(labelPhotoUrl, textFieldPhotoUrl, buttonPhoto, labelPhotoUrl1, labelPhotoUrl2);
+        add(progressBar, labelPhotoUrl, textFieldPhotoUrl, buttonPhoto, labelPhotoUrl1, labelPhotoUrl2);
 
         buttonPhoto.addClickListener(clickEvent -> {
             try{
