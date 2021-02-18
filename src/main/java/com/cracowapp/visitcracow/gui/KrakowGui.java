@@ -19,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -28,11 +30,18 @@ import java.util.stream.Collectors;
 @Route
 public class KrakowGui extends VerticalLayout{
 
+    private final String DEFAULT_IMAGE_TO_CHANGE_URL = "https://cdn.pixabay.com/photo/2019/06/18/04/49/wax-figure-4281412_960_720.jpg";
+
+    private final String GOOGLE_MAP_IMAGE_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?center=Krakow,Sukiennice&zoom=15&size=1300x2500&key=";
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(KrakowGui.class);
+
+
     @Autowired
     public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator,
                      ImageClient imageClient) {
 
-        Label labelWelcome = new Label("WELCOME TO KRAKOW - DISCOVER THE CITY AND GET YOUR OWN SOUVENIR PHOTO!");
+        Label labelWelcome = new Label("WELCOME TO KRAKOW - DISCOVER OLD TOWN AND GET YOUR OWN SOUVENIR PHOTO!");
         setHorizontalComponentAlignment(Alignment.CENTER, labelWelcome);
 
         ProgressBar progressBarMain = new ProgressBar();
@@ -43,8 +52,7 @@ public class KrakowGui extends VerticalLayout{
         horizontalLayout.setSizeFull();
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        Image image = new Image("https://maps.googleapis.com/maps/api/staticmap?center=Krakow,Sukiennice&zoom=15&size=1300x2500&key="
-                + googlePlacesClient.getGoogleKey(), "KRAKOW map");
+        Image image = new Image(GOOGLE_MAP_IMAGE_BASE_URL + googlePlacesClient.getGoogleKey(), "KRAKOW map");
 
         Label labelPlace = new Label("What would you like to find in Krakow?");
         Label labelRefreshPage = new Label("⟳ Please, refresh the page before a new search :)");
@@ -103,11 +111,11 @@ public class KrakowGui extends VerticalLayout{
 
         Label labelPhotoUrl = new Label("GET YOUR OWN SOUVENIR PHOTO FROM KRAKOW!");
         setHorizontalComponentAlignment(Alignment.CENTER, labelPhotoUrl);
-        TextField textFieldPhotoUrl = new TextField("Link to your photo (16:9 will be the best format of photo):");
-        textFieldPhotoUrl.setValue("https://cdn.pixabay.com/photo/2019/06/18/04/49/wax-figure-4281412_960_720.jpg");
+        TextField textFieldPhotoUrl = new TextField("Link to your photo (16:9 will be the best format of photo), e.g.:");
+        textFieldPhotoUrl.setValue(DEFAULT_IMAGE_TO_CHANGE_URL);
         textFieldPhotoUrl.setWidthFull();
         Button buttonPhoto = new Button("Click here and wait a moment, the photo will appear below ⬇ :");
-        Label labelPhotoUrl1 = new Label("* The photo of Queen Elizabeth II is a photo of a wax figure from the free photo database");
+        Label labelPhotoUrl1 = new Label("* Default photo of Queen Elizabeth II is a photo of a wax figure from the free photo database");
         Label labelPhotoUrl2 = new Label("** The amount of photo transformations is limited by the amount of credits, so it won't work forever :(");
         add(progressBar, labelPhotoUrl, textFieldPhotoUrl, buttonPhoto, labelPhotoUrl1, labelPhotoUrl2);
 
@@ -124,6 +132,7 @@ public class KrakowGui extends VerticalLayout{
                 dialog.setWidth("560px");
                 dialog.setHeight("100px");
                 dialog.open();
+                LOGGER.error("INVALID SOURCE IMAGE URL", e);
             }
         });
     }
