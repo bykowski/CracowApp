@@ -101,17 +101,5 @@
     "chokidar": "^3.5.0",
     "webpack-merge": "4.2.2",
     "webpack-dev-server": "3.11.0"
-  },
-  "scripts": {
-    "start": "node index.js"
-  },
-
-  "name": "krakow-app",
-  "description": "a really cool krakow app",
-  "version": "1.0.0",
-  "engines": {
-    "node": "12.11.1"
   }
-}
-
 }
