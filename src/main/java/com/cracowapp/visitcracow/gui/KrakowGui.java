@@ -115,9 +115,7 @@ public class KrakowGui extends VerticalLayout{
         textFieldPhotoUrl.setValue(DEFAULT_IMAGE_TO_CHANGE_URL);
         textFieldPhotoUrl.setWidthFull();
         Button buttonPhoto = new Button("Click here and wait a moment, the photo will appear below ⬇ :");
-        Label labelPhotoUrl1 = new Label("* Default photo of Queen Elizabeth II is a photo of a wax figure from the free photo database");
-        Label labelPhotoUrl2 = new Label("** The amount of photo transformations is limited by the amount of credits, so it won't work forever :(");
-        add(progressBar, labelPhotoUrl, textFieldPhotoUrl, buttonPhoto, labelPhotoUrl1, labelPhotoUrl2);
+        add(progressBar, labelPhotoUrl, textFieldPhotoUrl, buttonPhoto);
 
         buttonPhoto.addClickListener(clickEvent -> {
             try{
