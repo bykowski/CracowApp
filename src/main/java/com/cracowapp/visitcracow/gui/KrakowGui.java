@@ -36,7 +36,6 @@ public class KrakowGui extends VerticalLayout{
 
     public static final Logger LOGGER = LoggerFactory.getLogger(KrakowGui.class);
 
-
     @Autowired
     public KrakowGui(GooglePlacesClient googlePlacesClient, GoogleMyResultsMapCreator googleMyResultsMapCreator,
                      ImageClient imageClient) {
