@@ -13,7 +13,7 @@ public class GoogleMyResultsMapCreator {
     private static final String GOOGLE_MY_RESULTS_MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?" +
             "center=Krakow,Sukiennice&zoom=15&size=1300x2500&";
 
-    public String getGoogleMyResultsMapFinalUrl(String markers){
+    public String getGoogleMyResultsMapFinalUrl(String markers) {
         return UriComponentsBuilder
                 .fromUriString(GOOGLE_MY_RESULTS_MAP_BASE_URL)
                 .queryParam("markers", markers)
