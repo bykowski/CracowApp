@@ -2,10 +2,11 @@ package com.cracowapp.visitcracow.client;
 
 import com.cracowapp.visitcracow.model.GoogleMapPlaces;
 import com.cracowapp.visitcracow.model.Result;
-import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,29 +25,24 @@ public class GooglePlacesClient {
 
     private static final String GOOGLE_MAP_PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 
-    public List<Result> getGoogleMapPlaces(){
+    public List<Result> getGoogleMapPlaces() {
         RestTemplate restTemplate = new RestTemplate();
         GoogleMapPlaces googleMapPlaces = restTemplate.getForObject(getGoogleMapPlacesFinalUrl(), GoogleMapPlaces.class);
         List<Result> resultList = new ArrayList<>();
-        for (Result result: googleMapPlaces.getResults()){
+        for (Result result : googleMapPlaces.getResults()) {
             resultList.add(result);
         }
         return resultList;
     }
 
-    private URI getGoogleMapPlacesFinalUrl(){
-        URI uri = null;
-        try{
-            URIBuilder uriBuilder = new URIBuilder(GOOGLE_MAP_PLACES_BASE_URL);
-            uriBuilder.addParameter("location",CRACOW_COORDINATES );
-            uriBuilder.addParameter("radius", radius);
-            uriBuilder.addParameter("name", name);
-            uriBuilder.addParameter("key", googleKey);
-            uri = uriBuilder.build();
-        }catch (URISyntaxException e){
-            e.printStackTrace();
-        }
-        return uri;
+    private String getGoogleMapPlacesFinalUrl() {
+        return UriComponentsBuilder
+                .fromUriString(GOOGLE_MAP_PLACES_BASE_URL)
+                .queryParam("location", CRACOW_COORDINATES)
+                .queryParam("radius", radius)
+                .queryParam("name", name)
+                .queryParam("key", googleKey)
+                .encode().toUriString();
     }
 
     public String getRadius() {

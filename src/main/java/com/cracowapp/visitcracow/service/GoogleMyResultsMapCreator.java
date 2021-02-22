@@ -1,11 +1,8 @@
 package com.cracowapp.visitcracow.service;
 
-import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class GoogleMyResultsMapCreator {
@@ -16,16 +13,11 @@ public class GoogleMyResultsMapCreator {
     private static final String GOOGLE_MY_RESULTS_MAP_BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?" +
             "center=Krakow,Sukiennice&zoom=15&size=1300x2500&";
 
-    public URI getGoogleMyResultsMapFinalUrl(String markers){
-        URI uri = null;
-        try{
-            URIBuilder uriBuilder = new URIBuilder(GOOGLE_MY_RESULTS_MAP_BASE_URL);
-            uriBuilder.addParameter("markers", markers);
-            uriBuilder.addParameter("key", googleKey);
-            uri = uriBuilder.build();
-        }catch (URISyntaxException e){
-            e.printStackTrace();
-        }
-        return uri;
+    public String getGoogleMyResultsMapFinalUrl(String markers){
+        return UriComponentsBuilder
+                .fromUriString(GOOGLE_MY_RESULTS_MAP_BASE_URL)
+                .queryParam("markers", markers)
+                .queryParam("key", googleKey)
+                .encode().toUriString();
     }
 }
